@@ -1,1 +1,1 @@
-"./main.obj" "./tm4c1294ncpdt_startup_ccs.obj" "../tm4c1294ncpdt.cmd" -llibc.a -l"D:/Desktop/TI/driverlib/ccs/Debug/driverlib.lib" 
+"./src/boot/tm4c1294ncpdt_startup_ccs.obj" "./src/fake_code.obj" "./src/main.obj" "./src/signal/FFT.obj" "./src/utils/uartstdio.obj" "../src/boot/tm4c1294ncpdt.cmd" -llibc.a -l"D:/Desktop/TI/driverlib/ccs/Debug/driverlib.lib" 

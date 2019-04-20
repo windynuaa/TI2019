@@ -247,6 +247,7 @@ extern "C"
 // API Function prototypes
 //
 //*****************************************************************************
+
 extern void PWMGenConfigure(uint32_t ui32Base, uint32_t ui32Gen,
                             uint32_t ui32Config);
 extern void PWMGenPeriodSet(uint32_t ui32Base, uint32_t ui32Gen,
