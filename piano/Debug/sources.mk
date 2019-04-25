@@ -112,7 +112,7 @@ PDE_DEPS__QUOTED :=
 # Every subdirectory with source files must be described here
 SUBDIRS := \
 src/boot \
+src/drivers \
 src \
-src/signal \
 src/utils \
 

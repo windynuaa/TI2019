@@ -131,8 +131,8 @@ get_value();//鍒ゆ柇鐞撮敭
 get_key();//鍒ゆ柇鎺у埗鎸夐敭
 
 //PWM杈撳嚭
-enable_pwm();//浣胯兘PWM杈撳嚭
-set_pwm_freq();//璁剧疆PWM杈撳嚭棰戠巼
+//enable_pwm();//浣胯兘PWM杈撳嚭
+//set_pwm_freq();//璁剧疆PWM杈撳嚭棰戠巼
 
 //DSP绫�
 fft();//蹇�熷倕閲屽彾鍙樻崲

@@ -11,9 +11,9 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./src/boot/tm4c1294ncpdt_startup_ccs.obj" \
+"./src/drivers/FFT.obj" \
 "./src/fake_code.obj" \
 "./src/main.obj" \
-"./src/signal/FFT.obj" \
 "./src/utils/uartstdio.obj" \
 "../src/boot/tm4c1294ncpdt.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -28,12 +28,12 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/boot/subdir_vars.mk
+-include src/drivers/subdir_vars.mk
 -include src/subdir_vars.mk
--include src/signal/subdir_vars.mk
 -include src/utils/subdir_vars.mk
 -include src/boot/subdir_rules.mk
+-include src/drivers/subdir_rules.mk
 -include src/subdir_rules.mk
--include src/signal/subdir_rules.mk
 -include src/utils/subdir_rules.mk
 -include objects.mk
 
@@ -151,7 +151,7 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 piano.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: ARM Linker'
-	"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=TARGET_IS_TM4C129_RA0 --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"piano.map" --heap_size=0 --stack_size=512 -i"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib" -i"D:/Desktop/TI/inc" -i"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include" -i"D:/Desktop/TI/driverlib" -i"D:/Desktop/TI" -i"D:/Desktop/TI/utils" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="piano_linkInfo.xml" --rom_model -o "piano.out" $(ORDERED_OBJS)
+	"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/bin/armcl" -mv7M4 --code_state=16 --float_support=FPv4SPD16 -me --define=ccs="ccs" --define=PART_TM4C1294NCPDT -g --gcc --diag_warning=225 --diag_wrap=off --display_error_number --abi=eabi -z -m"piano.map" --heap_size=0 --stack_size=512 -i"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/lib" -i"D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="piano_linkInfo.xml" --rom_model -o "piano.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -165,8 +165,8 @@ piano.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.obj" "src\fake_code.obj" "src\main.obj" "src\signal\FFT.obj" "src\utils\uartstdio.obj" 
-	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.d" "src\fake_code.d" "src\main.d" "src\signal\FFT.d" "src\utils\uartstdio.d" 
+	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.obj" "src\drivers\FFT.obj" "src\fake_code.obj" "src\main.obj" "src\utils\uartstdio.obj" 
+	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.d" "src\drivers\FFT.d" "src\fake_code.d" "src\main.d" "src\utils\uartstdio.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
