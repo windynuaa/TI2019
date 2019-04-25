@@ -2,7 +2,7 @@
  * oled.h
  *
  *  Created on: 2019Äê4ÔÂ24ÈÕ
- *      Author: 17392
+ *      Author:
  */
 
 #ifndef SRC_DRIVERS_OLED_H_
@@ -46,6 +46,7 @@ void oled_init()
     SSIDataPut(SSI0_BASE,7);
 
     SSIDataPut(SSI0_BASE,0x40);
+    SSIDataPut(SSI0_BASE,0xC8);
 
     SSIDataPut(SSI0_BASE,0XAF);//kaixianshi
     SSIDataPut(SSI0_BASE,0xA4);//ceshipingmu
@@ -54,7 +55,7 @@ void oled_init()
 
 void disp_char(int x,int y,char c)//display a char
 {
-    memcpy(display_buffer[y][x],dictionary_buffer[c],8);
+    memcpy(display_buffer[y][x],dictionary_buffer[c-32],8);
 }
 
 void disp_sent(int y,char *buf,int len)//display a string
@@ -86,7 +87,7 @@ void refresh_led()//refresh oled ram
         UARTprintf("%x\n",0xb0+i);
         oled_write_cmd(0x10);
         oled_write_cmd(0x00);
-        for(j=15;j>-1;j--)
+        for(j=0;j<16;j++)
         {
             for(k=0;k<8;k++)
             {

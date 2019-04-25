@@ -56,6 +56,7 @@ extern uint32_t __STACK_TOP;
 // To be added by user
 extern void timer_pwm(void);
 extern void timer_dac(void);
+extern void timer_adc(void);
 //*****************************************************************************
 //
 // The vector table.  Note that the proper constructs must be placed on this to
@@ -104,7 +105,7 @@ void (* const g_pfnVectors[])(void) =
     IntDefaultHandler,                      // Watchdog timer
     timer_pwm,                      // Timer 0 subtimer A
     IntDefaultHandler,                      // Timer 0 subtimer B
-    IntDefaultHandler,                      // Timer 1 subtimer A
+    timer_adc,                      // Timer 1 subtimer A
     IntDefaultHandler,                      // Timer 1 subtimer B
     timer_dac,                      // Timer 2 subtimer A
     IntDefaultHandler,                      // Timer 2 subtimer B

@@ -29,9 +29,10 @@ src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/lin
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/_defs.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_limits.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/string.h
-src/main.obj: D:/Desktop/TI/piano/src/drivers/FFT.h
+src/main.obj: D:/Desktop/TI/piano/src/signal/FFT.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdlib.h
+src/main.obj: D:/Desktop/TI/piano/src/drivers/code.h
 src/main.obj: D:/Desktop/TI/piano/src/drivers/oled.h
 src/main.obj: D:/Desktop/TI/piano/src/drivers/hwinit.h
 
@@ -64,8 +65,9 @@ D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/linkage.h:
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/_defs.h: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/machine/_limits.h: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/string.h: 
-D:/Desktop/TI/piano/src/drivers/FFT.h: 
+D:/Desktop/TI/piano/src/signal/FFT.h: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdlib.h: 
+D:/Desktop/TI/piano/src/drivers/code.h: 
 D:/Desktop/TI/piano/src/drivers/oled.h: 
 D:/Desktop/TI/piano/src/drivers/hwinit.h: 

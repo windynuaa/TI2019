@@ -11,9 +11,9 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./src/boot/tm4c1294ncpdt_startup_ccs.obj" \
-"./src/drivers/FFT.obj" \
 "./src/fake_code.obj" \
 "./src/main.obj" \
+"./src/signal/FFT.obj" \
 "./src/utils/uartstdio.obj" \
 "../src/boot/tm4c1294ncpdt.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -28,12 +28,12 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include src/boot/subdir_vars.mk
--include src/drivers/subdir_vars.mk
 -include src/subdir_vars.mk
+-include src/signal/subdir_vars.mk
 -include src/utils/subdir_vars.mk
 -include src/boot/subdir_rules.mk
--include src/drivers/subdir_rules.mk
 -include src/subdir_rules.mk
+-include src/signal/subdir_rules.mk
 -include src/utils/subdir_rules.mk
 -include objects.mk
 
@@ -165,8 +165,8 @@ piano.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.obj" "src\drivers\FFT.obj" "src\fake_code.obj" "src\main.obj" "src\utils\uartstdio.obj" 
-	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.d" "src\drivers\FFT.d" "src\fake_code.d" "src\main.d" "src\utils\uartstdio.d" 
+	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.obj" "src\fake_code.obj" "src\main.obj" "src\signal\FFT.obj" "src\utils\uartstdio.obj" 
+	-$(RM) "src\boot\tm4c1294ncpdt_startup_ccs.d" "src\fake_code.d" "src\main.d" "src\signal\FFT.d" "src\utils\uartstdio.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 
