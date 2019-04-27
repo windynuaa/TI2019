@@ -49,6 +49,7 @@ void oled_init()
     SSIDataPut(SSI0_BASE,0xC8);
 
     SSIDataPut(SSI0_BASE,0XAF);//kaixianshi
+    SysCtlDelay(ui32SysClock / 1);
     SSIDataPut(SSI0_BASE,0xA4);//ceshipingmu
 }
 
@@ -84,7 +85,6 @@ void refresh_led()//refresh oled ram
     for(i=0;i<8;i++)
     {
         oled_write_cmd(0xb0+i);
-        UARTprintf("%x\n",0xb0+i);
         oled_write_cmd(0x10);
         oled_write_cmd(0x00);
         for(j=0;j<16;j++)
@@ -92,7 +92,6 @@ void refresh_led()//refresh oled ram
             for(k=0;k<8;k++)
             {
                 oled_write_data(display_buffer[i][j][k]);
-                UARTprintf("%x ",display_buffer[i][j][k]);
             }
         }
     }
@@ -108,7 +107,6 @@ void refresh_led_line(int y)//refresh oled ram
         for(k=0;k<8;k++)
         {
             oled_write_data(display_buffer[i][j][k]);
-            UARTprintf("%x ",display_buffer[i][j][k]);
         }
     }
 }

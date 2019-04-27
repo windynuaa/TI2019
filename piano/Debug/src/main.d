@@ -33,8 +33,9 @@ src/main.obj: D:/Desktop/TI/piano/src/signal/FFT.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h
 src/main.obj: D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdlib.h
 src/main.obj: D:/Desktop/TI/piano/src/drivers/code.h
-src/main.obj: D:/Desktop/TI/piano/src/drivers/oled.h
 src/main.obj: D:/Desktop/TI/piano/src/drivers/hwinit.h
+src/main.obj: D:/Desktop/TI/piano/src/drivers/oled.h
+src/main.obj: D:/Desktop/TI/piano/src/drivers/timers.h
 
 ../src/main.c: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdint.h: 
@@ -69,5 +70,6 @@ D:/Desktop/TI/piano/src/signal/FFT.h:
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdio.h: 
 D:/ti/ccs900/ccs/tools/compiler/ti-cgt-arm_18.12.1.LTS/include/stdlib.h: 
 D:/Desktop/TI/piano/src/drivers/code.h: 
-D:/Desktop/TI/piano/src/drivers/oled.h: 
 D:/Desktop/TI/piano/src/drivers/hwinit.h: 
+D:/Desktop/TI/piano/src/drivers/oled.h: 
+D:/Desktop/TI/piano/src/drivers/timers.h: 

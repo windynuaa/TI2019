@@ -15,8 +15,8 @@
 #include <stdlib.h>
 #include <math.h>
 
-#define FFT_SIZE  512
-#define log2FFT   9
+#define FFT_SIZE  256
+#define log2FFT   8
 #define N         (2 * FFT_SIZE)
 #define log2N     (log2FFT + 1)
 #define FREQUENCY 5

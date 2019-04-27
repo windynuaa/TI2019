@@ -18,16 +18,18 @@
 #include "string.h"
 #include "FFT.h"
 #include "code.h"
-#include "hwinit.h"
-#include "oled.h"
+
+
 volatile static uint32_t smpl=0;
 volatile static uint32_t adc_smpl=0;
-volatile double freq[1];
- static int16_t adc_buffer[N*2];
- static uint16_t spectrum[128];
- static uint16_t sound[128];
 
- volatile static uint32_t g_ui32Flags=0;
+volatile double freq[1];
+
+ static int16_t adc_buffer[N*2];
+ static int16_t spectrum[N*2];
+ static int16_t sound[N*2];
+
+volatile static uint32_t g_ui32Flags=0;
 
  uint32_t pui32ADC0Value[1];
 
@@ -35,60 +37,12 @@ volatile uint8_t display_buffer[8][16][8]={0};
 
 volatile  uint32_t ui32SysClock;
 //hardware driver
+#include "hwinit.h"
+#include "oled.h"
+#include "timers.h"
 
 
 
-
-void timer_pwm(void)
-{
-    TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-    HWREGBITW(&g_ui32Flags, 2) ^= 1;
-    GPIOPinWrite(GPIO_PORTN_BASE, GPIO_PIN_2, g_ui32Flags);
-}
-void timer_adc(void)//samp_rate 2048 smp/s
-{
-    volatile uint32_t *b;
-    static int16_t i,max,maxn;
-    TimerIntClear(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-    b=&adc_smpl;
-    ADCProcessorTrigger(ADC0_BASE, 3);
-    while(!ADCIntStatus(ADC0_BASE, 3, false));
-    ADCIntClear(ADC0_BASE, 3);
-    ADCSequenceDataGet(ADC0_BASE, 3, pui32ADC0Value);
-    if(*b<N)
-    {
-        adc_buffer[*b]=pui32ADC0Value[0];
-        (*b)++;
-    }
-    else
-    {
-        *b=0;
-        fix_fft(&adc_buffer[0], &adc_buffer[N], log2N, 0);
-        max=0;
-        maxn=0;
-        for(i=0;i<N;i++)
-        {
-            if(max<adc_buffer[i])
-            {
-                max=adc_buffer[i];
-                maxn=i;
-            }
-        }
-        maxn=maxn*2048;
-        *freq=(double)maxn/(2*N);
-    }
-
-}
-void timer_dac(void)
-{
-    volatile uint32_t *b;
-    b=&smpl;
-    TimerIntClear(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
-    *b=*b+1;
-    if(*b>127)
-        *b=0;
-    SSIDataPut(SSI1_BASE,sound[*b]);
-}
 double adc_get_value()
 {
     static int16_t alti[N];
@@ -125,7 +79,7 @@ double adc_get_value()
             maxn=icnt;
         }
     }
-    maxn=maxn*4000;
+    maxn=maxn*2560;
     return (double)maxn/N;
 }
 void turner()
@@ -145,19 +99,22 @@ void turner()
     TimerEnable(TIMER1_BASE, TIMER_A);
     while(1)
     {
-        //jianceanjian
+        if(GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_4)&GPIO_PIN_4)
+        {    //jianceanjian
 
-        //caijipinlv
-        //freq=adc_get_value();
+            //caijipinlv
+            //freq=adc_get_value();
 
-        if(freq[0]<20)
-            disp_sent(3,"+    ERROR     +",16);//display a string
-
-        UARTprintf("%f",freq[0]);
-        //jisuanpinlv
-
-        //xianshipinlv
-        refresh_led();
+            SysCtlDelay(ui32SysClock / 1);
+            //jisuanpinlv
+            IntDisable(INT_TIMER1A);
+            //xianshipinlv
+            //refresh_led_line(3);
+            refresh_led();
+            IntEnable(INT_TIMER1A);
+        }
+        else
+            break;
     }
     //jieshuchuli
     TimerDisable(TIMER1_BASE, TIMER_A);
@@ -168,16 +125,76 @@ void piano()
     //yingjianchushihua
     //dakaishizhong
     //xian shi cai dan
+    static uint16_t i, j, key[8];
+    static uint16_t music[8] = {105,117,132,140,157,176,197,210};
+    disp_sent(7,"++++++++++++++++",16);//display a string
+    disp_sent(6,"++    Piano   ++",16);//display a string
+    disp_sent(5,"++++++++++++++++",16);//display a string
+    disp_sent(4,"+              +",16);//display a string
+    disp_sent(3,"+              +",16);//display a string
+    disp_sent(2,"+              +",16);//display a string
+    disp_sent(1,"++++++++++++++++",16);//display a string
+    disp_sent(0,"back       sound",16);//display a string
+    refresh_led();
     TimerEnable(TIMER0_BASE, TIMER_A);
     while(1)
     {
-        //jianceanjian
 
-        //caijipinlv
-
-        //jisuanpinlv
-
-        //xianshipinlv
+        if(GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_5)&GPIO_PIN_5)
+        {//jianceanjian
+            if(!GPIOPinRead(GPIO_PORTG_BASE,A0))
+                key[0] = 1;
+            else
+                key[0] = 0;
+            if(!GPIOPinRead(GPIO_PORTK_BASE,A1))
+                key[1] = 1;
+            else
+                key[1] = 0;
+            if(!GPIOPinRead(GPIO_PORTK_BASE,A2))
+                key[2] = 1;
+            else
+                key[2] = 0;
+            if(!GPIOPinRead(GPIO_PORTM_BASE,A3))
+                key[3] = 1;
+            else
+                key[3] = 0;
+            if(!GPIOPinRead(GPIO_PORTM_BASE,A4))
+                key[4] = 1;
+            else
+                key[4] = 0;
+            if(!GPIOPinRead(GPIO_PORTM_BASE,A5))
+                key[5] = 1;
+            else
+                key[5] = 0;
+            if(!GPIOPinRead(GPIO_PORTH_BASE,A6))
+                key[6] = 1;
+            else
+                key[6] = 0;
+            if(!GPIOPinRead(GPIO_PORTH_BASE,A7))
+                key[7] = 1;
+            else
+                key[7] = 0;
+            for(j = 0; j <2*N; j++)
+                spectrum[j] = 0;
+            for(i = 0; i < 8; i++)
+            {
+                if(key[i]==1)
+                    spectrum[music[i]] =100;
+                //spectrum[i] =music[i];
+            }
+            //jisuanpinlv
+            fix_fft(&spectrum[0],&spectrum[N], log2N, 1);
+            for(i=0;i<=(2*N);i++)
+            {
+                spectrum[i]+=350;
+            }
+            IntDisable(INT_TIMER0A);
+            memcpy(sound,spectrum,4*N);
+            IntEnable(INT_TIMER0A);
+            //xianshipinlv
+        }
+        else
+            break;
 
     }
     //jieshuchuli
@@ -191,25 +208,50 @@ void piano()
 
 int main(void)
 {
+    int i;
     ui32SysClock=SysCtlClockFreqSet((SYSCTL_XTAL_25MHZ | SYSCTL_OSC_MAIN | SYSCTL_USE_PLL | SYSCTL_CFG_VCO_480), 120000000);
+
     InitConsole();
     adc_init();
     spi_init();
     oled_init();
     gpio_init();
     timer_init();
+
     disp_sent(7,"================",16);//display a string
     disp_sent(6,"++   Select   ++",16);//display a string
     disp_sent(5,"++  Function  ++",16);//display a string
     disp_sent(4,"++   Turner   ++",16);//display a string
     disp_sent(3,"++   Piano    ++",16);//display a string
     disp_sent(2,"================",16);//display a string
-
-    //clean_led_all(1);
+    disp_sent(1,"1234567890",16);//display a string
+    refresh_led();
     while(1)
     {
-        turner();
-
+        if(GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_4)&GPIO_PIN_4)
+        {
+            turner();
+            disp_sent(7,"================",16);//display a string
+                disp_sent(6,"++   Select   ++",16);//display a string
+                disp_sent(5,"++  Function  ++",16);//display a string
+                disp_sent(4,"++   Turner   ++",16);//display a string
+                disp_sent(3,"++   Piano    ++",16);//display a string
+                disp_sent(2,"================",16);//display a string
+                disp_sent(1,"                ",16);//display a string
+                refresh_led();
+        }
+        if(GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_5)&GPIO_PIN_5)
+        {
+            piano();
+            disp_sent(7,"================",16);//display a string
+                disp_sent(6,"++   Select   ++",16);//display a string
+                disp_sent(5,"++  Function  ++",16);//display a string
+                disp_sent(4,"++   Turner   ++",16);//display a string
+                disp_sent(3,"++   Piano    ++",16);//display a string
+                disp_sent(2,"================",16);//display a string
+                disp_sent(1,"1234567890",16);//display a string
+                refresh_led();
+        }
     }
 }
 

@@ -24,9 +24,30 @@ void gpio_init()
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
         GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_2);//PWM
         //key*8
-
+#define A0 GPIO_PIN_1
+#define A1 GPIO_PIN_4
+#define A2 GPIO_PIN_5
+#define A3 GPIO_PIN_0
+#define A4 GPIO_PIN_1
+#define A5 GPIO_PIN_2
+#define A6 GPIO_PIN_0
+#define A7 GPIO_PIN_1
+        static uint8_t key[8];
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOM);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOH);
+        GPIOPinTypeGPIOInput(GPIO_PORTG_BASE,A0);
+        GPIOPinTypeGPIOInput(GPIO_PORTK_BASE,A1);
+        GPIOPinTypeGPIOInput(GPIO_PORTK_BASE,A2);
+        GPIOPinTypeGPIOInput(GPIO_PORTM_BASE,A3);
+        GPIOPinTypeGPIOInput(GPIO_PORTM_BASE,A4);
+        GPIOPinTypeGPIOInput(GPIO_PORTM_BASE,A5);
+        GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A6);
+        GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A7);
         //control*3
-
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
+        GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_4|GPIO_PIN_5);// PIANO | TURNER
         //select*2
 
         //debug*1
@@ -49,17 +70,18 @@ void timer_init()
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
     TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 2 / 1280);
+    TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 2560);
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+    TimerClockSourceSet(TIMER0_BASE,TIMER_CLOCK_SYSTEM);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
     TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER1_BASE, TIMER_A, ui32SysClock / 2048);
+    TimerLoadSet(TIMER1_BASE, TIMER_A, ui32SysClock / 2560);
     TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
     TimerConfigure(TIMER2_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER2_BASE, TIMER_A, ui32SysClock / 1280);
+    TimerLoadSet(TIMER2_BASE, TIMER_A, ui32SysClock / 1);
     TimerIntEnable(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
     IntMasterEnable();
 
