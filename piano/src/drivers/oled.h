@@ -102,11 +102,11 @@ void refresh_led_line(int y)//refresh oled ram
     oled_write_cmd(0xb0+y);
     oled_write_cmd(0x10);
     oled_write_cmd(0x00);
-    for(j=15;j>-1;j--)
+    for(j=0;j<16;j++)
     {
         for(k=0;k<8;k++)
         {
-            oled_write_data(display_buffer[i][j][k]);
+            oled_write_data(display_buffer[y][j][k]);
         }
     }
 }

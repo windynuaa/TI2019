@@ -1,0 +1,1 @@
+"./src/boot/tm4c1294ncpdt_startup_ccs.obj" "./src/drivers/hwinit.obj" "./src/drivers/oled.obj" "./src/fake_code.obj" "./src/main.obj" "./src/signal/FFT.obj" "./src/utils/uartstdio.obj" "../tm4c1294ncpdt.cmd" "../src/boot/tm4c1294ncpdt.cmd" -l"configPkg/linker.cmd" -llibc.a 

@@ -48,6 +48,39 @@ void gpio_init()
         //control*3
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
         GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_4|GPIO_PIN_5);// PIANO | TURNER
+
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_3);// PIANO | TURNER
+        GPIOPinTypeGPIOInput(GPIO_PORTN_BASE,GPIO_PIN_2);// PIANO | TURNER
+        //select*2
+
+        //debug*1
+
+}
+void gpio_initn()
+{
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
+        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_2);//PWM
+        //key*8
+        /*
+#define A0 GPIO_PIN_0   //PL0
+#define A1 GPIO_PIN_1   //PL1
+#define A2 GPIO_PIN_2   //PL2
+#define A3 GPIO_PIN_3   //PL3
+#define A4 GPIO_PIN_4   //PL4
+#define A5 GPIO_PIN_5   //PL5
+#define A6 GPIO_PIN_0   //PH0
+#define A7 GPIO_PIN_1   //PH1
+*/
+       // static uint8_t key[8];
+        //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
+        //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOH);
+        //GPIOPinTypeGPIOInput(GPIO_PORTG_BASE,A0|A1|A2|A3|A4|A5);
+        //GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A6|A7);
+
+        //control*3
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
+        GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_4|GPIO_PIN_5);// PIANO | TURNER
         //select*2
 
         //debug*1
@@ -70,7 +103,7 @@ void timer_init()
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
     TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 2560);
+    TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 5120);
     TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
     TimerClockSourceSet(TIMER0_BASE,TIMER_CLOCK_SYSTEM);
 
