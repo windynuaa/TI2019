@@ -19,7 +19,7 @@
 #include "FFT.h"
 #include "code.h"
 
-#define ATTUN 0.0001
+#define ATTUN_DEC 0.0001
 #define DELAY_TIME 100
 
 volatile  static uint32_t sample_count=0;//dac output position
@@ -33,7 +33,7 @@ static int16_t adc_buffer[N*2];//adc sample buffer
 static int16_t spectrum[N*2];//spectrum buffer
 static int16_t sound[N*2];//sound output buffer
 uint32_t pui32ADC0Value[1];//adcvalue
-uint32_t count;//ultra_sonic_time_count
+uint32_t ultra_sonic_time_count;//ultra_sonic_time_count
 
 void delay(int num)
 {

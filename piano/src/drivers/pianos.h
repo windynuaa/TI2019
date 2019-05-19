@@ -76,7 +76,7 @@ void pianoSDL()
             }
 
             delay(DELAY_TIME);
-            count=0;
+            ultra_sonic_time_count=0;
             echo_time_out=0;
 
             IntDisable(INT_TIMER0A);//disable interrupt to avoid disturbing
@@ -92,11 +92,11 @@ void pianoSDL()
 
             while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
             {
-                if(count++>5000)////wait too long,quit!
+                if(ultra_sonic_time_count++>5000)////wait too long,quit!
                     break;
             }
-            count+=1280;
-            TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / count);//set new freq
+            ultra_sonic_time_count+=1280;
+            TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / ultra_sonic_time_count);//set new freq
             IntEnable(INT_TIMER0A);
         }
         else
@@ -181,7 +181,7 @@ void pianoADV()
                 //
                 attenuation_factor=1;
                 //
-                count=0;
+                ultra_sonic_time_count=0;
                 echo_time_out=0;
 
                 IntDisable(INT_TIMER0A);//disable interrupt to avoid disturbing
@@ -196,19 +196,19 @@ void pianoADV()
 
                 while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
                 {
-                    if(count++>4999)////wait too long,quit!
+                    if(ultra_sonic_time_count++>4999)////wait too long,quit!
                         break;
                 }
-                count=count/1000;
-                count=1280*pow(2,count);
-                TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / count);
+                ultra_sonic_time_count=ultra_sonic_time_count/1000;
+                ultra_sonic_time_count=1280*pow(2,ultra_sonic_time_count);
+                TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / ultra_sonic_time_count);
                 //apply new sound data
                 memcpy(sound,spectrum,4*N);//memcpy is faster than "for" loop
                 IntEnable(INT_TIMER0A);
             }
 
             if(attenuation_factor>0.06)
-                attenuation_factor-=ATTUN;
+                attenuation_factor-=ATTUN_DEC;
         }
         else
             break;
@@ -296,7 +296,7 @@ void piano()
                 IntEnable(INT_TIMER0A);
             }
             if(attenuation_factor>0.06)
-                attenuation_factor-=ATTUN;
+                attenuation_factor-=ATTUN_DEC;
         }
         else
             break;
@@ -381,10 +381,10 @@ void pianoVOL()
                 //change volume
                 for(i=0;i<=N;i++)
                 {
-                    spectrum[i]=spectrum[i]*0.0002*count;
+                    spectrum[i]=spectrum[i]*0.0002*ultra_sonic_time_count;
                 }
                 attenuation_factor=1;
-                count=0;
+                ultra_sonic_time_count=0;
                 echo_time_out=0;
 
                 IntDisable(INT_TIMER0A);//disable interrupt to avoid disturbing
@@ -399,19 +399,19 @@ void pianoVOL()
 
                 while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
                 {
-                    if(count++>4999)////wait too long,quit!
+                    if(ultra_sonic_time_count++>4999)////wait too long,quit!
                         break;
                 }
-                count=count/1000;
-                count=1280*pow(2,count);
-                TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / count);
+                ultra_sonic_time_count=ultra_sonic_time_count/1000;
+                ultra_sonic_time_count=1280*pow(2,ultra_sonic_time_count);
+                TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / ultra_sonic_time_count);
                 //apply new sound data
                 memcpy(sound,spectrum,4*N);//memcpy is faster than "for" loop
                 IntEnable(INT_TIMER0A);
             }
             delay(DELAY_TIME);
             echo_time_out=0;
-            count=0;
+            ultra_sonic_time_count=0;
             IntDisable(INT_TIMER0A);
             GPIOPinWrite(GPIO_PORTN_BASE,GPIO_PIN_3,0);//release trig to start distance detect
             echo_pin_data=GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2);
@@ -424,7 +424,7 @@ void pianoVOL()
 
             while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
             {
-                if(count++>4999)////wait too long,quit!
+                if(ultra_sonic_time_count++>4999)////wait too long,quit!
                     break;
             }
             IntEnable(INT_TIMER0A);

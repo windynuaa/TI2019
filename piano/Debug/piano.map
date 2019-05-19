@@ -1,7 +1,7 @@
 ******************************************************************************
                   TI ARM Linker PC v18.12.1                    
 ******************************************************************************
->> Linked Sun May 19 20:36:11 2019
+>> Linked Sun May 19 20:44:02 2019
 
 OUTPUT FILE NAME:   <piano.out>
 ENTRY POINT SYMBOL: "_c_int00_noargs"  address: 0000451d
@@ -156,9 +156,9 @@ section   page    origin      length       input sections
                   20003038    00000008     main.obj (.bss:key_pre$8)
                   20003040    00000008     main.obj (.bss)
                   20003048    00000008     (.common:freq)
-                  20003050    00000004     (.common:count)
-                  20003054    00000004     (.common:pui32ADC0Value)
-                  20003058    00000004     (.common:ui32SysClock)
+                  20003050    00000004     (.common:pui32ADC0Value)
+                  20003054    00000004     (.common:ui32SysClock)
+                  20003058    00000004     (.common:ultra_sonic_time_count)
 
 .data      0    20003060    00000c2c     UNINITIALIZED
                   20003060    000007f8     main.obj (.data:dictionary_buffer)
@@ -370,7 +370,6 @@ ffffffff  binit
 0000024f  console_init                  
 0000467b  copysign                      
 0000467b  copysignl                     
-20003050  count                         
 00000209  delay                         
 20003060  dictionary_buffer             
 20003858  display_buffer                
@@ -400,7 +399,7 @@ ffffffff  binit
 000016b9  pianoVOL                      
 00001f31  pow                           
 00001f31  powl                          
-20003054  pui32ADC0Value                
+20003050  pui32ADC0Value                
 00003bfd  scalbn                        
 00003bfd  scalbnl                       
 000003bb  spi_init                      
@@ -410,7 +409,8 @@ ffffffff  binit
 00000aed  timer_dac                     
 0000034b  timer_init                    
 00001b51  turner                        
-20003058  ui32SysClock                  
+20003054  ui32SysClock                  
+20003058  ultra_sonic_time_count        
 
 
 GLOBAL SYMBOLS: SORTED BY Symbol Address 
@@ -546,9 +546,9 @@ address   name
 000053f0  __TI_CINIT_Base               
 00005400  __TI_CINIT_Limit              
 20003048  freq                          
-20003050  count                         
-20003054  pui32ADC0Value                
-20003058  ui32SysClock                  
+20003050  pui32ADC0Value                
+20003054  ui32SysClock                  
+20003058  ultra_sonic_time_count        
 20003060  dictionary_buffer             
 20003858  display_buffer                
 20003c60  attenuation_factor            
