@@ -9,21 +9,32 @@
 #ifndef SRC_DRIVERS_HWINIT_H_
 #define SRC_DRIVERS_HWINIT_H_
 
-void InitConsole(void)
+//
+//  name : console_init
+//  Initialize the USART output
+//
+
+void console_init(void)
 {
+    //configure pins
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
     GPIOPinConfigure(GPIO_PA0_U0RX);
     GPIOPinConfigure(GPIO_PA1_U0TX);
     GPIOPinTypeUART(GPIO_PORTA_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    //configure USART controller
     SysCtlPeripheralEnable(SYSCTL_PERIPH_UART0);
     UARTClockSourceSet(UART0_BASE, UART_CLOCK_PIOSC);
     UARTStdioConfig(0, 115200, 16000000);
 }
+
+//
+//  name : gpio_init
+//  Initialize the input port
+//
+
 void gpio_init()
 {
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_2);//PWM
-        //key*8
+        //piano key
 #define A0 GPIO_PIN_1
 #define A1 GPIO_PIN_4
 #define A2 GPIO_PIN_5
@@ -32,7 +43,7 @@ void gpio_init()
 #define A5 GPIO_PIN_2
 #define A6 GPIO_PIN_0
 #define A7 GPIO_PIN_1
-        static uint8_t key[8];
+
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOK);
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOM);
@@ -45,98 +56,70 @@ void gpio_init()
         GPIOPinTypeGPIOInput(GPIO_PORTM_BASE,A5);
         GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A6);
         GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A7);
-        //control*3
+        //control key *3
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
-        GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_4|GPIO_PIN_5);// PIANO | TURNER
-
+        GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);// K1 K2 K3
+        //ultrasonic module
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_3);// PIANO | TURNER
-        GPIOPinTypeGPIOInput(GPIO_PORTN_BASE,GPIO_PIN_2);// PIANO | TURNER
-        //select*2
+        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_3);// trig
+        GPIOPinTypeGPIOInput(GPIO_PORTN_BASE,GPIO_PIN_2);//  echo
 
-        //debug*1
+
 
 }
-void gpio_initn()
-{
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPION);
-        GPIOPinTypeGPIOOutput(GPIO_PORTN_BASE,GPIO_PIN_2);//PWM
-        //key*8
-        /*
-#define A0 GPIO_PIN_0   //PL0
-#define A1 GPIO_PIN_1   //PL1
-#define A2 GPIO_PIN_2   //PL2
-#define A3 GPIO_PIN_3   //PL3
-#define A4 GPIO_PIN_4   //PL4
-#define A5 GPIO_PIN_5   //PL5
-#define A6 GPIO_PIN_0   //PH0
-#define A7 GPIO_PIN_1   //PH1
-*/
-       // static uint8_t key[8];
-        //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
-        //SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOH);
-        //GPIOPinTypeGPIOInput(GPIO_PORTG_BASE,A0|A1|A2|A3|A4|A5);
-        //GPIOPinTypeGPIOInput(GPIO_PORTH_BASE,A6|A7);
-
-        //control*3
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOL);
-        GPIOPinTypeGPIOInput(GPIO_PORTL_BASE,GPIO_PIN_4|GPIO_PIN_5);// PIANO | TURNER
-        //select*2
-
-        //debug*1
-
-}
+//
+//  name : adc_init
+//  Initialize the ADC module
+//
 void adc_init()
 {
+    //configure input pin
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
     GPIOPinTypeADC(GPIO_PORTE_BASE, GPIO_PIN_3);
-
+    //configure ADC controller
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_ADC0);
     ADCSequenceConfigure(ADC0_BASE, 3, ADC_TRIGGER_PROCESSOR, 0);
     ADCSequenceStepConfigure(ADC0_BASE, 3, 0, ADC_CTL_CH0 | ADC_CTL_IE | ADC_CTL_END);
     ADCSequenceEnable(ADC0_BASE, 3);
     ADCIntClear(ADC0_BASE, 3);
 }
+//
+//  name : timer_init
+//  Initialize timers
+//
 
 void timer_init()
 {
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
-    TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 5120);
-    TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
-    TimerClockSourceSet(TIMER0_BASE,TIMER_CLOCK_SYSTEM);
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
-    TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER1_BASE, TIMER_A, ui32SysClock / 2560);
-    TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
-
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER2);
-    TimerConfigure(TIMER2_BASE, TIMER_CFG_PERIODIC);
-    TimerLoadSet(TIMER2_BASE, TIMER_A, ui32SysClock / 1);
-    TimerIntEnable(TIMER2_BASE, TIMER_TIMA_TIMEOUT);
-    IntMasterEnable();
-
-
-    //TimerEnable(TIMER0_BASE, TIMER_A);
-    //TimerEnable(TIMER1_BASE, TIMER_A);
-    //TimerEnable(TIMER2_BASE, TIMER_A);
-
-    IntEnable(INT_TIMER0A);
-    IntEnable(INT_TIMER1A);
-    IntEnable(INT_TIMER2A);
-
+    //configure sound output timer
+   SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER0);
+   TimerConfigure(TIMER0_BASE, TIMER_CFG_PERIODIC);
+   TimerLoadSet(TIMER0_BASE, TIMER_A, ui32SysClock / 5120);//sample rate = 5120
+   TimerIntEnable(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
+   TimerClockSourceSet(TIMER0_BASE,TIMER_CLOCK_SYSTEM);
+   //configure sample timer
+   SysCtlPeripheralEnable(SYSCTL_PERIPH_TIMER1);
+   TimerConfigure(TIMER1_BASE, TIMER_CFG_PERIODIC);
+   TimerLoadSet(TIMER1_BASE, TIMER_A, ui32SysClock / 2560);//sample rate = 5120
+   TimerIntEnable(TIMER1_BASE, TIMER_TIMA_TIMEOUT);
+   //enable interrupt
+   IntMasterEnable();
+   IntEnable(INT_TIMER0A);
+   IntEnable(INT_TIMER1A);
 }
+
+//
+//  name : spi_init
+//  Initialize the SPI module
+//
 void spi_init()
 {
-    //FOR DISPLAY
+    //FOR DISPLAY 10KHz
 
     SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI0);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
-    GPIOPinConfigure(GPIO_PA2_SSI0CLK);
+    GPIOPinConfigure(GPIO_PA2_SSI0CLK);//clk
     GPIOPinConfigure(GPIO_PA3_SSI0FSS);//cs
-    GPIOPinConfigure(GPIO_PA4_SSI0XDAT0);
+    GPIOPinConfigure(GPIO_PA4_SSI0XDAT0);//do
     GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE,GPIO_PIN_5);//cmd
     GPIOPinTypeGPIOOutput(GPIO_PORTA_BASE,GPIO_PIN_6);//rst
     GPIOPinTypeSSI(GPIO_PORTA_BASE,GPIO_PIN_3 | GPIO_PIN_2 | GPIO_PIN_4);
@@ -144,13 +127,13 @@ void spi_init()
     SSIConfigSetExpClk(SSI0_BASE,ui32SysClock,SSI_FRF_MOTO_MODE_0,SSI_MODE_MASTER,10000,8);
     SSIEnable(SSI0_BASE);
 
-    //FOR DAC
+    //FOR DAC 50MHz
     SysCtlPeripheralEnable(SYSCTL_PERIPH_SSI1);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOE);
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
-    GPIOPinConfigure(GPIO_PB5_SSI1CLK);
+    GPIOPinConfigure(GPIO_PB5_SSI1CLK);//clk
     GPIOPinConfigure(GPIO_PB4_SSI1FSS);//cs
-    GPIOPinConfigure(GPIO_PE4_SSI1XDAT0);
+    GPIOPinConfigure(GPIO_PE4_SSI1XDAT0);//do
     GPIOPinTypeSSI(GPIO_PORTB_BASE,GPIO_PIN_5 | GPIO_PIN_4);
     GPIOPinTypeSSI(GPIO_PORTE_BASE, GPIO_PIN_4);
     SSIClockSourceSet(SSI1_BASE,SSI_CLOCK_SYSTEM);
