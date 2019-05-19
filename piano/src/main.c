@@ -19,25 +19,29 @@
 #include "FFT.h"
 #include "code.h"
 
+#define ATTUN 0.0001
+#define DELAY_TIME 100
 
-volatile static uint32_t sample_count=0;
-volatile static uint32_t adc_smpl=0;
-static uint16_t music[8] = {105,117,132,140,157,176,197,210};
-volatile double freq[1];
+volatile  static uint32_t sample_count=0;//dac output position
+volatile  static uint32_t adc_smpl=0;//adc output position
+volatile  uint8_t display_buffer[8][16][8]={0};//store oled display ram
+volatile  uint32_t ui32SysClock;//system clock per second
+volatile  double attenuation_factor=1;//attenuation_factor
+volatile  double freq[1];//input frequency
+static uint16_t music[8] = {105,117,132,140,157,176,197,210};//pre_load spectrum position
+static int16_t adc_buffer[N*2];//adc sample buffer
+static int16_t spectrum[N*2];//spectrum buffer
+static int16_t sound[N*2];//sound output buffer
+uint32_t pui32ADC0Value[1];//adcvalue
+uint32_t count;//ultra_sonic_time_count
 
- static int16_t adc_buffer[N*2];
- static int16_t spectrum[N*2];
- static int16_t sound[N*2];
-
-volatile static uint32_t g_ui32Flags=0;
-
-uint32_t pui32ADC0Value[1];
-
-volatile uint8_t display_buffer[8][16][8]={0};
-
-volatile  uint32_t ui32SysClock;
-int count;
-volatile  double attenuation_factor=1;
+void delay(int num)
+{
+    int i,j,k;
+    for(i=0;i<num;i++)
+        for(j=0;j<10000;j++)
+            k=1;
+}
 
 //hardware driver
 #include "hwinit.h"
@@ -48,9 +52,6 @@ volatile  double attenuation_factor=1;
 
 void turner()
 {
-    //double freq;
-    //yingjianchushihua
-    //xian shi cai dan
     int i;
     oled_disp_sent(7,"++++++++++++++++",16);//display a string
     oled_disp_sent(6,"++   Turner   ++",16);//display a string
@@ -107,78 +108,76 @@ int main(void)
     {
         control_key_data=GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
         control_key_data=control_key_data>>1;
-        switch(i)
+        switch(control_key_data)
         {
         case 0:
-            {
-                    turner();
-                    oled_disp_sent(7,"======5555======",16);//display a string
-                    oled_disp_sent(6,"++   Select   ++",16);//display a string
-                    oled_disp_sent(5,"++  Function  ++",16);//display a string
-                    oled_disp_sent(4,"++   Turner   ++",16);//display a string
-                    oled_disp_sent(3,"++   Piano    ++",16);//display a string
-                    oled_disp_sent(2,"================",16);//display a string
-                    oled_disp_sent(1,"                ",16);//display a string
-                    oled_refresh();
-                    break;
-            }
+        {
+            turner();
+            oled_disp_sent(7,"======5555======",16);//display a string
+            oled_disp_sent(6,"++   Select   ++",16);//display a string
+            oled_disp_sent(5,"++  Function  ++",16);//display a string
+            oled_disp_sent(4,"++   Turner   ++",16);//display a string
+            oled_disp_sent(3,"++   Piano    ++",16);//display a string
+            oled_disp_sent(2,"================",16);//display a string
+            oled_disp_sent(1,"                ",16);//display a string
+            oled_refresh();
+            break;
+        }
         case 1:
-            {
-                pianoADV();
-                    oled_disp_sent(7,"================",16);//display a string
-                    oled_disp_sent(6,"++   Select   ++",16);//display a string
-                    oled_disp_sent(5,"++  Function  ++",16);//display a string
-                    oled_disp_sent(4,"++   Turner   ++",16);//display a string
-                    oled_disp_sent(3,"++   Piano    ++",16);//display a string
-                    oled_disp_sent(2,"================",16);//display a string
-                    oled_disp_sent(1,"                ",16);//display a string
-                    oled_refresh();
-                    break;
-             }
+        {
+            pianoADV();
+            oled_disp_sent(7,"================",16);//display a string
+            oled_disp_sent(6,"++   Select   ++",16);//display a string
+            oled_disp_sent(5,"++  Function  ++",16);//display a string
+            oled_disp_sent(4,"++   Turner   ++",16);//display a string
+            oled_disp_sent(3,"++   Piano    ++",16);//display a string
+            oled_disp_sent(2,"================",16);//display a string
+            oled_disp_sent(1,"                ",16);//display a string
+            oled_refresh();
+            break;
+         }
 
         case 2:
-                    {
-                        pianoSDL();
-                            oled_disp_sent(7,"================",16);//display a string
-                            oled_disp_sent(6,"++   Select   ++",16);//display a string
-                            oled_disp_sent(5,"++  Function  ++",16);//display a string
-                            oled_disp_sent(4,"++   Turner   ++",16);//display a string
-                            oled_disp_sent(3,"++   Piano    ++",16);//display a string
-                            oled_disp_sent(2,"================",16);//display a string
-                            oled_disp_sent(1,"                ",16);//display a string
-                            oled_refresh();
-                            break;
-                    }
+        {
+            pianoSDL();
+            oled_disp_sent(7,"================",16);//display a string
+            oled_disp_sent(6,"++   Select   ++",16);//display a string
+            oled_disp_sent(5,"++  Function  ++",16);//display a string
+            oled_disp_sent(4,"++   Turner   ++",16);//display a string
+            oled_disp_sent(3,"++   Piano    ++",16);//display a string
+            oled_disp_sent(2,"================",16);//display a string
+            oled_disp_sent(1,"                ",16);//display a string
+            oled_refresh();
+            break;
+        }
 
         case 3:
-                            {
-                                piano();
-
-                                    oled_disp_sent(7,"================",16);//display a string
-                                    oled_disp_sent(6,"++   Select   ++",16);//display a string
-                                    oled_disp_sent(5,"++  Function  ++",16);//display a string
-                                    oled_disp_sent(4,"++   Turner   ++",16);//display a string
-                                    oled_disp_sent(3,"++   Piano    ++",16);//display a string
-                                    oled_disp_sent(2,"================",16);//display a string
-                                    oled_disp_sent(1,"                ",16);//display a string
-                                    oled_refresh();
-                                    break;
-                            }
+        {
+            piano();
+            oled_disp_sent(7,"================",16);//display a string
+            oled_disp_sent(6,"++   Select   ++",16);//display a string
+            oled_disp_sent(5,"++  Function  ++",16);//display a string
+            oled_disp_sent(4,"++   Turner   ++",16);//display a string
+            oled_disp_sent(3,"++   Piano    ++",16);//display a string
+            oled_disp_sent(2,"================",16);//display a string
+            oled_disp_sent(1,"                ",16);//display a string
+            oled_refresh();
+            break;
+        }
 
         case 4:
-                            {
-                                pianoVOL();
-
-                                    oled_disp_sent(7,"================",16);//display a string
-                                    oled_disp_sent(6,"++   Select   ++",16);//display a string
-                                    oled_disp_sent(5,"++  Function  ++",16);//display a string
-                                    oled_disp_sent(4,"++   Turner   ++",16);//display a string
-                                    oled_disp_sent(3,"++   Piano    ++",16);//display a string
-                                    oled_disp_sent(2,"================",16);//display a string
-                                    oled_disp_sent(1,"                ",16);//display a string
-                                    oled_refresh();
-                                    break;
-                            }
+        {
+            pianoVOL();
+            oled_disp_sent(7,"================",16);//display a string
+            oled_disp_sent(6,"++   Select   ++",16);//display a string
+            oled_disp_sent(5,"++  Function  ++",16);//display a string
+            oled_disp_sent(4,"++   Turner   ++",16);//display a string
+            oled_disp_sent(3,"++   Piano    ++",16);//display a string
+            oled_disp_sent(2,"================",16);//display a string
+            oled_disp_sent(1,"                ",16);//display a string
+            oled_refresh();
+            break;
+        }
 
         }
     }

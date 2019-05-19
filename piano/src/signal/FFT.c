@@ -433,23 +433,3 @@ int fix_fftr(short f[], int m, int inverse)
 }
 
 
-/*
-int main()
-{
-    int i, scale, j, a;
-    unsigned diff;
-    short x[N], fx[2*N];
-    double result;
-    for (i=0; i<N; i++)
-    {
-        x[i] = AMPLITUDE*cos(i*FREQUENCY*(2*3.1415926535)/N);
-        fx[i] = x[i];
-        fx[N+i] = x[i];
-    }
-    fix_fft(&fx[0], &fx[N], log2N, 0);
-    for(i=0;i<N;i++)
-    {
-        printf("%d  ",fx[i]);
-    }
-}
-*/

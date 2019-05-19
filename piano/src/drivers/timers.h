@@ -88,7 +88,7 @@ output  :   none
 ======================================*/
 void timer_dac(void)
 {
-    uint32_t *dac_count;
+    volatile uint32_t *dac_count;
     dac_count=&sample_count;//get the current output position of sound array
     TimerIntClear(TIMER0_BASE, TIMER_TIMA_TIMEOUT);
     *dac_count=*dac_count+1;

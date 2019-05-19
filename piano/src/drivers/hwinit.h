@@ -1,10 +1,11 @@
 /*
  * hwinit.h
  *
- *  ini
+ *
  *  Created on: 2019Äê4ÔÂ24ÈÕ
  *      Author:
  */
+
 
 #ifndef SRC_DRIVERS_HWINIT_H_
 #define SRC_DRIVERS_HWINIT_H_
