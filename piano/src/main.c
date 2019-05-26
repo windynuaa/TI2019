@@ -19,7 +19,7 @@
 #include "FFT.h"
 #include "code.h"
 
-#define ATTUN_DEC 0.0001
+#define ATTUN_DEC 0.00006
 #define DELAY_TIME 100
 
 volatile  static uint32_t sample_count=0;//dac output position

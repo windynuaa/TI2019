@@ -26,6 +26,7 @@ void pianoSDL()
     TimerEnable(TIMER0_BASE, TIMER_A);
     while(1)
     {
+        attenuation_factor=1;
         control_key_data=GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
         control_key_data=control_key_data>>1;
         if(control_key_data==2)
@@ -75,7 +76,7 @@ void pianoSDL()
                 memcpy(sound,spectrum,4*N);//memcpy is faster than "for" loop
             }
 
-            delay(DELAY_TIME);
+            //delay(DELAY_TIME);
             ultra_sonic_time_count=0;
             echo_time_out=0;
 
@@ -86,7 +87,7 @@ void pianoSDL()
             while(!(echo_pin_data))//Wait until a high level occur on echo pin
             {
                 echo_pin_data=GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2);
-                if(echo_time_out++>1000)//wait too long,quit!
+                if(echo_time_out++>10000)//wait too long,quit!
                    break;
             }
 
@@ -190,7 +191,7 @@ void pianoADV()
                 while(!(echo_pin_data))//Wait until a high level occur on echo pin
                 {
                     echo_pin_data=GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2);
-                    if(echo_time_out++>1000)//wait too long,quit!
+                    if(echo_time_out++>10000)//wait too long,quit!
                        break;
                 }
 
@@ -207,7 +208,7 @@ void pianoADV()
                 IntEnable(INT_TIMER0A);
             }
 
-            if(attenuation_factor>0.06)
+            if(attenuation_factor>0.01)
                 attenuation_factor-=ATTUN_DEC;
         }
         else
@@ -295,7 +296,7 @@ void piano()
                 memcpy(sound,spectrum,4*N);//memcpy is faster than "for" loop
                 IntEnable(INT_TIMER0A);
             }
-            if(attenuation_factor>0.06)
+            if(attenuation_factor>0.01)
                 attenuation_factor-=ATTUN_DEC;
         }
         else
@@ -328,7 +329,7 @@ void pianoVOL()
     TimerEnable(TIMER0_BASE, TIMER_A);
     while(1)
     {
-        attenuation_factor=1;
+
         control_key_data=GPIOPinRead(GPIO_PORTL_BASE,GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3);
         control_key_data=control_key_data>>1;
         if(control_key_data==4)
@@ -381,7 +382,7 @@ void pianoVOL()
                 //change volume
                 for(i=0;i<=N;i++)
                 {
-                    spectrum[i]=spectrum[i]*0.0002*ultra_sonic_time_count;
+                    spectrum[i]=spectrum[i];
                 }
                 attenuation_factor=1;
                 ultra_sonic_time_count=0;
@@ -393,13 +394,13 @@ void pianoVOL()
                 while(!(echo_pin_data))//Wait until a high level occur on echo pin
                 {
                     echo_pin_data=GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2);
-                    if(echo_time_out++>1000)//wait too long,quit!
+                    if(echo_time_out++>10000)//wait too long,quit!
                        break;
                 }
 
                 while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
                 {
-                    if(ultra_sonic_time_count++>4999)////wait too long,quit!
+                    if(ultra_sonic_time_count++>9999)////wait too long,quit!
                         break;
                 }
                 ultra_sonic_time_count=ultra_sonic_time_count/1000;
@@ -418,15 +419,16 @@ void pianoVOL()
             while(!(echo_pin_data))//Wait until a high level occur on echo pin
             {
                 echo_pin_data=GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2);
-                if(echo_time_out++>1000)//wait too long,quit!
+                if(echo_time_out++>10000)//wait too long,quit!
                    break;
             }
 
             while(GPIOPinRead(GPIO_PORTN_BASE,GPIO_PIN_2))//Wait until the high level disappear
             {
-                if(ultra_sonic_time_count++>4999)////wait too long,quit!
+                if(ultra_sonic_time_count++>9999)////wait too long,quit!
                     break;
             }
+            attenuation_factor=(double)ultra_sonic_time_count/9999;
             IntEnable(INT_TIMER0A);
         }
         else
